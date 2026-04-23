@@ -147,7 +147,7 @@ npm run seed
 
 ### Stats
 
-GET /leads/stats
+```GET /leads/stats```
 
 Retorna:
 - Total de leads
@@ -159,7 +159,7 @@ Retorna:
 
 ### AI Summary
 
-POST /leads/ai/summary
+```POST /leads/ai/summary```
 
 Genera un resumen ejecutivo usando OpenAI con fallback automático en caso de error.
 
@@ -167,7 +167,7 @@ Genera un resumen ejecutivo usando OpenAI con fallback automático en caso de er
 
 ## Query Filters
 
-GET /leads
+```GET /leads?```
 
 - page
 - limit
@@ -175,30 +175,6 @@ GET /leads
 - startDate
 - endDate
 - order (DESC por defecto)
-
----
-
-## Architecture
-
-src/
- ├── leads/
- │    ├── dto/
- │    ├── entities/
- │    ├── leads.controller.ts
- │    ├── leads.service.ts
- │
- ├── ai/
- │    ├── ai.service.ts
- │
- ├── database/
- │    ├── migrations/
- │    ├── data-source.ts
- │
- ├── seeds/
- │    ├── seed.ts
- │
- ├── common/
- │    ├── interceptors/
 
 ---
 
@@ -211,39 +187,6 @@ El sistema incluye fallback automático cuando OpenAI falla:
 - Network failures
 
 En estos casos, se devuelve un resumen mock estructurado para garantizar continuidad del servicio.
-
----
-
-## Database
-
-### Run migrations
-
-```bash
-npm run migration:run
-```
-
-### Generate migration
-
-```bash
-npm run migration:generate src/database/migrations/CreateLeadsTable
-```
-
-### Seed database
-
-```bash
-npm run seed
-```
-
----
-
-## Future Improvements
-
-- Redis caching para IA
-- Rate limiting por usuario
-- Dashboard analytics frontend
-- Lead scoring automático
-- Webhooks
-- Multi-tenant architecture
 
 ---
 
