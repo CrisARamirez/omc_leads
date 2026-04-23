@@ -125,6 +125,8 @@ npm run migration:revert
 
 ### Seed
 
+Ejecuta un script que crear 10 leads en la base de datos.
+
 ```bash
 npm run seed
 ```
