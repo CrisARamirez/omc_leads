@@ -140,7 +140,7 @@ export class LeadsService {
       const promedio = await this.leadRepository
         .createQueryBuilder('lead')
         .select('AVG(lead.presupuesto)', 'avg')
-        .getRawOne();
+        .getRawOne<{ avg: string }>();
 
       const ultimos7Dias = await this.leadRepository
         .createQueryBuilder('lead')
@@ -150,7 +150,7 @@ export class LeadsService {
       return {
         total,
         porFuente,
-        promedioPresupuesto: Number(promedio || 0),
+        promedioPresupuesto: Number(promedio?.avg ?? 0),
         ultimos7Dias,
       };
     } catch (error) {
