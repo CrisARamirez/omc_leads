@@ -33,6 +33,8 @@ import { EnvConfig } from '../config/env.config';
           database: config.getOrThrow('DB_NAME'),
           synchronize: false,
           migrationsRun: true,
+
+          entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         };
       },
     }),

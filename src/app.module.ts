@@ -9,11 +9,11 @@ import { LeadsModule } from './leads/leads.module';
 
 @Module({
   imports: [
-    LeadsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: envValidationSchema,
     }),
+    LeadsModule,
     DatabaseModule,
   ],
   controllers: [AppController],
