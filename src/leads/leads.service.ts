@@ -1,7 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, FindOptionsWhere, Repository } from 'typeorm';
 
+import { AiService } from '../ai/ai.service';
+import { AiSummaryDto } from './dto/ai-summary.dto';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { GetLeadsQueryDto } from './dto/get-leads.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
@@ -12,6 +14,7 @@ export class LeadsService {
   constructor(
     @InjectRepository(Lead)
     private readonly leadRepository: Repository<Lead>,
+    private readonly aiService: AiService,
   ) {}
 
   async create(dto: CreateLeadDto) {
@@ -156,6 +159,48 @@ export class LeadsService {
     } catch (error) {
       throw new HttpException(
         { message: 'Error obteniendo estadísticas', error },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async aiSummary(dto: AiSummaryDto) {
+    try {
+      const startDate = dto.startDate ? new Date(dto.startDate) : new Date(0);
+
+      const endDate = dto.endDate ? new Date(dto.endDate) : new Date();
+
+      const where: FindOptionsWhere<Lead> = {
+        created_at: Between(startDate, endDate),
+      };
+
+      if (dto.fuente) {
+        where.fuente = dto.fuente;
+      }
+
+      const leads = await this.leadRepository.find({
+        where,
+        order: {
+          created_at: 'DESC',
+        },
+      });
+
+      const summary = await this.aiService.generateLeadSummary(leads);
+
+      return {
+        totalLeads: leads.length,
+        range: {
+          startDate,
+          endDate,
+        },
+        summary,
+      };
+    } catch (error) {
+      throw new HttpException(
+        {
+          message: 'Error generando resumen IA',
+          error,
+        },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

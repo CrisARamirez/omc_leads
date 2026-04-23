@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 
+import { AiSummaryDto } from './dto/ai-summary.dto';
 import { CreateLeadDto } from './dto/create-lead.dto';
 import { GetLeadsQueryDto, LeadIdParamDto } from './dto/get-leads.dto';
 import { UpdateLeadDto } from './dto/update-lead.dto';
@@ -19,11 +20,6 @@ export class LeadsController {
     return this.leadsService.findAll(query);
   }
 
-  @Get('stats')
-  stats() {
-    return this.leadsService.stats();
-  }
-
   @Get(':id')
   findOne(@Param() params: LeadIdParamDto) {
     return this.leadsService.findOne(params.id);
@@ -37,5 +33,15 @@ export class LeadsController {
   @Delete(':id')
   remove(@Param() params: LeadIdParamDto) {
     return this.leadsService.remove(params.id);
+  }
+
+  @Get('stats')
+  stats() {
+    return this.leadsService.stats();
+  }
+
+  @Post('ai/summary')
+  aiSummary(@Body() dto: AiSummaryDto) {
+    return this.leadsService.aiSummary(dto);
   }
 }
